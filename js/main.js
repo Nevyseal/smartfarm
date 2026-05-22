@@ -17,14 +17,39 @@ const App = (() => {
     // Setup navigation
     function setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const tabName = link.getAttribute('data-tab');
                 switchTab(tabName);
+                
+                // Close sidebar on mobile after clicking
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
             });
         });
+
+        // Mobile menu toggle
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+            });
+        }
+
+        // Overlay click to close
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+        }
 
         // Set dashboard as default
         switchTab('dashboard');
