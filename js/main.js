@@ -204,7 +204,98 @@ const App = (() => {
         const dashboardTab = document.getElementById('dashboard');
         if (dashboardTab && dashboardTab.classList.contains('active')) {
             Charts.updateDashboardCharts();
+            updateUpcomingTasks();
         }
+    }
+
+    // Update upcoming tasks display
+    function updateUpcomingTasks() {
+        const tasksList = document.getElementById('upcoming-tasks-list');
+        if (!tasksList) return;
+
+        const tasks = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 1. Get Vaccinations
+        if (typeof Vaccinations !== 'undefined') {
+            Vaccinations.getAll().forEach(v => {
+                if (v.nextDueDate) {
+                    const dueDate = new Date(v.nextDueDate);
+                    const animal = Animals.getById(v.animalId);
+                    tasks.push({
+                        title: `Vaccination: ${v.vaccineType}`,
+                        animal: animal ? animal.name : 'Unknown',
+                        date: dueDate,
+                        icon: '💉',
+                        type: 'vaccine'
+                    });
+                }
+            });
+        }
+
+        // 2. Get Deworming
+        if (typeof Deworming !== 'undefined') {
+            Deworming.getAll().forEach(d => {
+                if (d.nextDueDate) {
+                    const dueDate = new Date(d.nextDueDate);
+                    const animal = Animals.getById(d.animalId);
+                    tasks.push({
+                        title: `Deworming: ${d.brand}`,
+                        animal: animal ? animal.name : 'Unknown',
+                        date: dueDate,
+                        icon: '💊',
+                        type: 'deworming'
+                    });
+                }
+            });
+        }
+
+        // 3. Get Breeding (Pregnancy Due Dates)
+        if (typeof Breeding !== 'undefined') {
+            Breeding.getAll().forEach(b => {
+                if (b.status === 'pregnant' && b.expectedDueDate) {
+                    const dueDate = new Date(b.expectedDueDate);
+                    const animal = Animals.getById(b.animalId);
+                    tasks.push({
+                        title: 'Expected Calving',
+                        animal: animal ? animal.name : 'Unknown',
+                        date: dueDate,
+                        icon: '🤰',
+                        type: 'breeding'
+                    });
+                }
+            });
+        }
+
+        // Sort by date
+        tasks.sort((a, b) => a.date - b.date);
+
+        if (tasks.length === 0) {
+            tasksList.innerHTML = '<p class="empty-msg">No upcoming tasks scheduled.</p>';
+            return;
+        }
+
+        tasksList.innerHTML = tasks.map(task => {
+            const diffDays = Math.ceil((task.date - today) / (1000 * 60 * 60 * 24));
+            let urgency = 'green';
+            
+            if (diffDays < 0) urgency = 'red'; // Overdue
+            else if (diffDays <= 7) urgency = 'yellow'; // Due within a week
+            
+            const dateStr = task.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
+            return `
+                <div class="task-item task-urgency-${urgency}">
+                    <div class="task-icon">${task.icon}</div>
+                    <div class="task-info">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-meta">${task.animal}</div>
+                    </div>
+                    <div class="task-date">${dateStr}</div>
+                </div>
+            `;
+        }).join('');
     }
 
     // Setup settings
