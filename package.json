@@ -7,7 +7,6 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "serve": "npx http-server",
-    "build": "echo 'No build required for static site'",
     "test": "echo 'No tests configured yet'",
     "dev": "python -m http.server 8000"
   },
