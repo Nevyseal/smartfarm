@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌾 Smart Farm Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -20,22 +23,50 @@
             <div class="logo">
                 <h1><span>⚡</span> FARM MANAGER</h1>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#" data-tab="dashboard" class="nav-link active">📊 Dashboard</a></li>
-                <li><a href="#" data-tab="animals" class="nav-link">🐄 Animals</a></li>
-                <li><a href="#" data-tab="vaccinations" class="nav-link">💉 Vaccinations</a></li>
-                <li><a href="#" data-tab="production" class="nav-link">🥛 Production</a></li>
-                <li><a href="#" data-tab="health" class="nav-link">🏥 Health</a></li>
-                <li><a href="#" data-tab="nutrition" class="nav-link">🌾 Nutrition</a></li>
-                <li><a href="#" data-tab="deworming" class="nav-link">💊 Deworming</a></li>
-                <li><a href="#" data-tab="breeding" class="nav-link">👶 Breeding</a></li>
-                <li><a href="#" data-tab="sales" class="nav-link">💰 Sales</a></li>
-                <li><a href="#" data-tab="expenses" class="nav-link">💸 Expenses</a></li>
-                <li><a href="#" data-tab="employees" class="nav-link">👥 Employees</a></li>
-                <li><a href="#" data-tab="reports" class="nav-link">📈 Reports</a></li>
-                <li><a href="#" data-tab="data-management" class="nav-link">💾 Data Management</a></li>
-                <li><a href="#" data-tab="settings" class="nav-link">⚙️ Settings</a></li>
-            </ul>
+            
+            <div class="sidebar-section">
+                <p class="section-title">Main Menu</p>
+                <ul class="nav-menu">
+                    <li><a href="#" data-tab="dashboard" class="nav-link active">📊 Dashboard</a></li>
+                    <li><a href="#" data-tab="reports" class="nav-link">📈 Reports</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <p class="section-title">Operations</p>
+                <ul class="nav-menu">
+                    <li><a href="#" data-tab="animals" class="nav-link">🐄 Animals</a></li>
+                    <li><a href="#" data-tab="production" class="nav-link">🥛 Production</a></li>
+                    <li><a href="#" data-tab="breeding" class="nav-link">👶 Breeding</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <p class="section-title">Health & Nutrition</p>
+                <ul class="nav-menu">
+                    <li><a href="#" data-tab="health" class="nav-link">🏥 Health</a></li>
+                    <li><a href="#" data-tab="vaccinations" class="nav-link">💉 Vaccinations</a></li>
+                    <li><a href="#" data-tab="deworming" class="nav-link">💊 Deworming</a></li>
+                    <li><a href="#" data-tab="nutrition" class="nav-link">🌾 Nutrition</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <p class="section-title">Finance & Staff</p>
+                <ul class="nav-menu">
+                    <li><a href="#" data-tab="sales" class="nav-link">💰 Sales</a></li>
+                    <li><a href="#" data-tab="expenses" class="nav-link">💸 Expenses</a></li>
+                    <li><a href="#" data-tab="employees" class="nav-link">👥 Employees</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <p class="section-title">Management</p>
+                <ul class="nav-menu">
+                    <li><a href="#" data-tab="data-management" class="nav-link">💾 Data Management</a></li>
+                    <li><a href="#" data-tab="settings" class="nav-link">⚙️ Settings</a></li>
+                </ul>
+            </div>
         </nav>
 
         <!-- Main Content -->
