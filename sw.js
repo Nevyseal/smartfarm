@@ -13,6 +13,12 @@ const urlsToCache = [
     '/js/production.js',
     '/js/nutrition.js',
     '/js/deworming.js',
+    '/js/health.js',
+    '/js/breeding.js',
+    '/js/sales.js',
+    '/js/expenses.js',
+    '/js/employees.js',
+    '/js/data-management.js',
     '/js/charts.js',
     '/js/config.js'
 ];
