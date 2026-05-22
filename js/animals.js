@@ -37,6 +37,8 @@ const Animals = (() => {
         if (formContainer) {
             formContainer.classList.remove('hidden');
             document.getElementById('animal-form').reset();
+            document.getElementById('animal-id').value = '';
+            document.getElementById('animal-form-title').textContent = 'Add New Animal';
             document.getElementById('animal-date-added').valueAsDate = new Date();
         }
     }
@@ -49,10 +51,11 @@ const Animals = (() => {
         }
     }
 
-    // Handle add animal form submission
+    // Handle add/edit animal form submission
     async function handleAddAnimal(e) {
         e.preventDefault();
 
+        const animalId = document.getElementById('animal-id').value;
         const animalData = {
             type: document.getElementById('animal-type').value,
             name: document.getElementById('animal-name').value,
@@ -60,8 +63,12 @@ const Animals = (() => {
             weight: parseFloat(document.getElementById('animal-weight').value) || 0,
             dateAdded: document.getElementById('animal-date-added').value,
             status: document.getElementById('animal-status').value,
-            createdAt: new Date().toISOString()
+            updatedAt: new Date().toISOString()
         };
+
+        if (!animalId) {
+            animalData.createdAt = new Date().toISOString();
+        }
 
         if (!animalData.type || !animalData.name) {
             showNotification('Please fill in all required fields', 'error');
@@ -69,30 +76,45 @@ const Animals = (() => {
         }
 
         try {
-            showLoader('Adding animal...');
+            showLoader(animalId ? 'Updating animal...' : 'Adding animal...');
             
             const db = getDb();
             if (!db) {
                 // Use local storage if Firebase is not available
-                animalData.id = generateId();
-                allAnimals.push(animalData);
+                if (animalId) {
+                    const index = allAnimals.findIndex(a => a.id === animalId);
+                    if (index !== -1) {
+                        allAnimals[index] = { ...allAnimals[index], ...animalData };
+                    }
+                } else {
+                    animalData.id = generateId();
+                    allAnimals.push(animalData);
+                }
                 Storage.set(ANIMALS_COLLECTION, allAnimals);
             } else {
                 // Save to Firebase
-                const docRef = await db.collection(ANIMALS_COLLECTION).add(animalData);
-                animalData.id = docRef.id;
-                allAnimals.push(animalData);
+                if (animalId) {
+                    await db.collection(ANIMALS_COLLECTION).doc(animalId).update(animalData);
+                    const index = allAnimals.findIndex(a => a.id === animalId);
+                    if (index !== -1) {
+                        allAnimals[index] = { ...allAnimals[index], ...animalData, id: animalId };
+                    }
+                } else {
+                    const docRef = await db.collection(ANIMALS_COLLECTION).add(animalData);
+                    animalData.id = docRef.id;
+                    allAnimals.unshift(animalData);
+                }
             }
 
             hideLoader();
-            showNotification('Animal added successfully!', 'success');
+            showNotification(animalId ? 'Animal updated successfully!' : 'Animal added successfully!', 'success');
             hideAddAnimalForm();
             renderAnimals();
             updateDashboard();
         } catch (error) {
             hideLoader();
-            console.error('Error adding animal:', error);
-            showNotification('Error adding animal. Please try again.', 'error');
+            console.error('Error saving animal:', error);
+            showNotification('Error saving animal. Please try again.', 'error');
         }
     }
 
@@ -173,18 +195,25 @@ const Animals = (() => {
         `).join('');
     }
 
-    // Edit animal (placeholder - can be extended)
+    // Edit animal
     async function editAnimal(animalId) {
         const animal = allAnimals.find(a => a.id === animalId);
         if (animal) {
+            document.getElementById('animal-id').value = animal.id;
+            document.getElementById('animal-form-title').textContent = `Edit Animal: ${animal.name}`;
             document.getElementById('animal-type').value = animal.type;
             document.getElementById('animal-name').value = animal.name;
             document.getElementById('animal-age').value = animal.age;
             document.getElementById('animal-weight').value = animal.weight;
             document.getElementById('animal-date-added').value = animal.dateAdded;
             document.getElementById('animal-status').value = animal.status;
-            showAddAnimalForm();
-            // Note: This would need form modification to handle updates
+            
+            // Show form
+            const formContainer = document.getElementById('animal-form-container');
+            if (formContainer) {
+                formContainer.classList.remove('hidden');
+                formContainer.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     }
 
