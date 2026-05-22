@@ -528,8 +528,37 @@
                 <!-- BREEDING TAB -->
                 <div id="breeding" class="tab-content">
                     <div class="tab-header">
-                        <h2>Breeding & Pregnancy Tracking</h2>
-                        <button id="add-breeding-btn" class="btn btn-primary">+ Add Breeding Record</button>
+                        <h2>Breeding Management</h2>
+                        <button id="add-breeding-btn" class="btn btn-primary">+ Add Record</button>
+                    </div>
+
+                    <div class="breeding-status-container">
+                        <div class="breeding-status-header">
+                            <h3>Breeding Status</h3>
+                            <a href="#" class="manage-link" onclick="document.getElementById('add-breeding-btn').click(); return false;">Manage</a>
+                        </div>
+                        <div class="breeding-status-grid">
+                            <div class="status-card in-heat">
+                                <div class="status-icon">🔥</div>
+                                <div class="status-count" id="count-in-heat">0</div>
+                                <div class="status-label">In Heat</div>
+                            </div>
+                            <div class="status-card inseminated">
+                                <div class="status-icon">💉</div>
+                                <div class="status-count" id="count-inseminated">0</div>
+                                <div class="status-label">Inseminated</div>
+                            </div>
+                            <div class="status-card pregnant">
+                                <div class="status-icon">❤️</div>
+                                <div class="status-count" id="count-pregnant">0</div>
+                                <div class="status-label">Pregnant</div>
+                            </div>
+                            <div class="status-card deliveries">
+                                <div class="status-icon">👶</div>
+                                <div class="status-count" id="count-deliveries">0</div>
+                                <div class="status-label">Deliveries</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="breeding-target-info">

@@ -427,6 +427,91 @@ html, body {
     font-style: italic;
 }
 
+/* Breeding Status Section */
+.breeding-status-container {
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom, #f0fdf4, #ffffff);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.breeding-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.breeding-status-header h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.manage-link {
+    color: #065f46;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.breeding-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.status-card {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.in-heat .status-icon { background-color: #fee2e2; }
+.inseminated .status-icon { background-color: #e0e7ff; }
+.pregnant .status-icon { background-color: #fce7f3; }
+.deliveries .status-icon { background-color: #fef3c7; }
+
+.status-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.status-label {
+    font-size: 0.95rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .breeding-status-grid {
+        grid-template-columns: 1fr 1fr; /* Keep 2 columns even on mobile as per image */
+    }
+    
+    .status-card {
+        padding: 15px;
+    }
+    
+    .status-count {
+        font-size: 1.5rem;
+    }
+}
+
 @keyframes pulse {
     0% { opacity: 1; }
     50% { opacity: 0.4; }

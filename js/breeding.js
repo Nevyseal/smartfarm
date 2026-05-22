@@ -133,6 +133,8 @@ const Breeding = (() => {
         const list = document.getElementById('breeding-list');
         if (!list) return;
 
+        updateStatusCounts();
+
         if (allBreeding.length === 0) {
             list.innerHTML = '<p style="padding: 20px; text-align: center; color: #7f8c8d;">No breeding records yet.</p>';
             return;
@@ -178,6 +180,31 @@ const Breeding = (() => {
                 </div>
             `;
         }).join('');
+    }
+
+    function updateStatusCounts() {
+        const counts = {
+            in_heat: 0,
+            inseminated: 0,
+            pregnant: 0,
+            delivered: 0
+        };
+
+        allBreeding.forEach(record => {
+            if (counts.hasOwnProperty(record.status)) {
+                counts[record.status]++;
+            }
+        });
+
+        const elInHeat = document.getElementById('count-in-heat');
+        const elInseminated = document.getElementById('count-inseminated');
+        const elPregnant = document.getElementById('count-pregnant');
+        const elDeliveries = document.getElementById('count-deliveries');
+
+        if (elInHeat) elInHeat.textContent = counts.in_heat;
+        if (elInseminated) elInseminated.textContent = counts.inseminated;
+        if (elPregnant) elPregnant.textContent = counts.pregnant;
+        if (elDeliveries) elDeliveries.textContent = counts.delivered;
     }
 
     async function editRecord(recordId) {
