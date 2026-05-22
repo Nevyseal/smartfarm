@@ -4,7 +4,9 @@
     --primary-dark: #219150;
     --secondary-color: #2c3e50;
     --bg-color: #f4f7f6;
-    --sidebar-bg: #ffffff;
+    --sidebar-bg: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    --sidebar-text: #ffffff;
+    --header-bg: #ffffff;
     --card-bg: #ffffff;
     --text-dark: #2d3436;
     --text-light: #636e72;
@@ -12,28 +14,32 @@
     --danger-color: #e74c3c;
     --warning-color: #f1c40f;
     --success-color: #2ecc71;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --transition: all 0.3s ease;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* Theme Variables */
-    --body-bg: var(--bg-color);
-    --header-bg: #ffffff;
+    /* Surface Colors */
+    --surface-1: #ffffff;
+    --surface-2: #f8f9fa;
     --input-bg: #ffffff;
-    --input-text: var(--text-dark);
 }
 
 [data-theme="dark"] {
-    --bg-color: #121212;
-    --sidebar-bg: #1e1e1e;
-    --card-bg: #1e1e1e;
+    --bg-color: #0f111a;
+    --sidebar-bg: #1a1c23;
+    --sidebar-text: #e0e0e0;
+    --header-bg: #1a1c23;
+    --card-bg: #1a1c23;
     --text-dark: #e0e0e0;
-    --text-light: #b0b0b0;
-    --border-color: #333333;
+    --text-light: #94a3b8;
+    --border-color: #2d3748;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --body-bg: #121212;
-    --header-bg: #1e1e1e;
-    --input-bg: #2d2d2d;
-    --input-text: #e0e0e0;
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+    
+    /* Surface Colors */
+    --surface-1: #1a1c23;
+    --surface-2: #242731;
+    --input-bg: #242731;
 }
 
 * {
@@ -43,69 +49,11 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--body-bg);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
     color: var(--text-dark);
     line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar {
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-color);
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.header {
-    background-color: var(--header-bg);
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.card, .stat-card, .chart-box, .form-container, .vaccine-card, .status-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-dark);
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-input, select, textarea {
-    background-color: var(--input-bg);
-    color: var(--input-text);
-    border: 1px solid var(--border-color);
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-.nav-link {
-    color: var(--text-light);
-}
-
-.nav-link:hover, .nav-link.active {
-    background-color: rgba(39, 174, 96, 0.1);
-    color: var(--primary-color);
-}
-
-/* Theme Toggle Button */
-.theme-toggle-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-    color: var(--text-dark);
-}
-
-.theme-toggle-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="dark"] .theme-toggle-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ==================== LAYOUT ==================== */
@@ -117,43 +65,39 @@ input, select, textarea {
 }
 
 .sidebar {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    color: white;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
     padding: 20px;
     overflow-y: auto;
     box-shadow: var(--shadow);
+    border-right: 1px solid var(--border-color);
+    transition: var(--transition);
 }
 
-.logo h1 {
-    font-size: 18px;
-    margin-bottom: 30px;
-    text-align: center;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-    padding-bottom: 15px;
-}
-
-.nav-menu {
-    list-style: none;
-}
-
-.nav-menu li {
-    margin-bottom: 10px;
+.sidebar h1 {
+    color: var(--sidebar-text);
 }
 
 .nav-link {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 12px 15px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-size: 14px;
+    color: var(--sidebar-text);
+    opacity: 0.8;
+}
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-light);
 }
 
 .nav-link:hover,
 .nav-link.active {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(5px);
+    opacity: 1;
+    color: white;
+}
+
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+    background-color: rgba(39, 174, 96, 0.2);
+    color: var(--primary-color);
 }
 
 .main-content {
@@ -164,13 +108,139 @@ input, select, textarea {
 }
 
 .header {
-    background: white;
-    padding: 20px 30px;
-    border-bottom: 2px solid var(--border-color);
+    background-color: var(--header-bg);
+    padding: 15px 30px;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.header-left h2 {
+    color: var(--primary-color);
+    font-size: 22px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+    background-color: var(--bg-color);
+}
+
+/* ==================== COMPONENTS ==================== */
+.card, .stat-card, .chart-box, .form-container, .vaccine-card, .status-card, .animal-card {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    padding: 24px;
+}
+
+.stat-card {
+    border-top: 4px solid var(--primary-color) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.stat-card h3 {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+.chart-box h3, .form h3, .tab-header h2 {
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+input, select, textarea {
+    background-color: var(--input-bg);
+    color: var(--text-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
+}
+
+/* Specific component overrides for Dark Mode */
+[data-theme="dark"] .card, 
+[data-theme="dark"] .stat-card, 
+[data-theme="dark"] .chart-box, 
+[data-theme="dark"] .form-container, 
+[data-theme="dark"] .vaccine-card, 
+[data-theme="dark"] .status-card, 
+[data-theme="dark"] .animal-card {
+    background-color: rgba(26, 28, 35, 0.8) !important;
+    backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .task-item {
+    background-color: var(--surface-2);
+    border-color: transparent;
+}
+
+[data-theme="dark"] .task-title {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .task-meta {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .task-date {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .breeding-status-container {
+    background: linear-gradient(to bottom, #1a1c23, #0f111a);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .breeding-target-info {
+    background: var(--surface-2);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .status-card {
+    background-color: var(--surface-2) !important;
+}
+
+/* Sidebar Styling Enhancement */
+.sidebar .logo h1 {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.sidebar .logo span {
+    color: #ffd700; /* Gold bolt */
 }
 
 .header-left h2 {

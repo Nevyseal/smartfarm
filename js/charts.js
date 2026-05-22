@@ -4,21 +4,34 @@
 const Charts = (() => {
     let charts = {};
 
+    // Get theme-aware colors
+    function getThemeColors() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        return {
+            text: isDark ? '#94a3b8' : '#636e72',
+            grid: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+            cardBg: isDark ? '#1a1c23' : '#ffffff'
+        };
+    }
+
     // Initialize charts
     function init() {
         setupCharts();
+        
+        // Listen for theme changes to redraw charts
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                    updateAll();
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true });
     }
 
     // Setup all charts
     function setupCharts() {
-        // Initialize empty chart objects
-        charts.production = null;
-        charts.animals = null;
-        charts.productionTrend = null;
-        charts.monthlyProduction = null;
-        charts.healthStatus = null;
-        charts.vaccinationCoverage = null;
-        charts.dewormingSchedule = null;
+        // ... rest of logic
     }
 
     // Update dashboard charts
@@ -31,6 +44,7 @@ const Charts = (() => {
         const ctx = document.getElementById('productionChart');
         if (!ctx) return;
 
+        const colors = getThemeColors();
         const last7Days = getLast7DaysData();
         
         if (charts.production) {
@@ -46,13 +60,14 @@ const Charts = (() => {
                     data: last7Days.data,
                     borderColor: '#2ecc71',
                     backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                    borderWidth: 2,
+                    borderWidth: 3,
                     fill: true,
                     tension: 0.4,
                     pointBackgroundColor: '#2ecc71',
-                    pointBorderColor: '#fff',
+                    pointBorderColor: colors.cardBg,
                     pointBorderWidth: 2,
-                    pointRadius: 6
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
@@ -60,16 +75,24 @@ const Charts = (() => {
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        position: 'top'
+                        position: 'top',
+                        labels: { color: colors.text }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
+                        grid: { color: colors.grid },
+                        ticks: { color: colors.text },
                         title: {
                             display: true,
-                            text: 'Liters'
+                            text: 'Liters',
+                            color: colors.text
                         }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: colors.text }
                     }
                 }
             }
@@ -366,11 +389,22 @@ const Charts = (() => {
 
     // Update all charts
     function updateAll() {
-        updateDashboardCharts();
-        updateProductionTrendChart();
-        updateMonthlyProductionChart();
-        updateVaccinationCoverageChart();
-        updateDewormingScheduleChart();
+        const dashboardTab = document.getElementById('dashboard');
+        if (dashboardTab && dashboardTab.classList.contains('active')) {
+            updateDashboardCharts();
+        }
+        
+        const productionTab = document.getElementById('production');
+        if (productionTab && productionTab.classList.contains('active')) {
+            updateProductionTrendChart();
+        }
+        
+        const reportsTab = document.getElementById('reports');
+        if (reportsTab && reportsTab.classList.contains('active')) {
+            updateMonthlyProductionChart();
+            updateVaccinationCoverageChart();
+            updateDewormingScheduleChart();
+        }
     }
 
     // Public API
