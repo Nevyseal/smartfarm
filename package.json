@@ -1,0 +1,41 @@
+{
+  "name": "smart-farm-manager",
+  "version": "1.0.0",
+  "description": "A comprehensive web-based farm management system for cattle, sheep, and goats",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server",
+    "build": "echo 'No build required for static site'",
+    "test": "echo 'No tests configured yet'",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": [
+    "farm",
+    "management",
+    "livestock",
+    "cattle",
+    "sheep",
+    "goats",
+    "vaccinations",
+    "production",
+    "nutrition",
+    "deworming"
+  ],
+  "author": "Smart Farming Team",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^3.9.1",
+    "firebase": "^9.22.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/smart-farm-manager"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/smart-farm-manager/issues"
+  },
+  "homepage": "https://github.com/yourusername/smart-farm-manager#readme"
+}

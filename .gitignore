@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment & Credentials
+.env
+config.local.js
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Data & Temp Files
+excel_dump.json
+*.xlsx
+*.pyc
+__pycache__/
+*.log
+import-logs/
+excel-import.json
+
+# Local Server scripts (if you want to keep them local)
+*.bat
+*.vbs
+*.py

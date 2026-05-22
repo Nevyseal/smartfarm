@@ -1,0 +1,232 @@
+{
+  "animals": [
+    {
+      "id": "animal_001",
+      "type": "cow",
+      "name": "Bessie-001",
+      "age": 36,
+      "weight": 450.5,
+      "dateAdded": "2023-06-15",
+      "status": "active",
+      "createdAt": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": "animal_002",
+      "type": "cow",
+      "name": "Daisy-002",
+      "age": 24,
+      "weight": 420.0,
+      "dateAdded": "2023-09-20",
+      "status": "active",
+      "createdAt": "2024-01-01T10:05:00Z"
+    },
+    {
+      "id": "animal_003",
+      "type": "sheep",
+      "name": "Woolly-001",
+      "age": 18,
+      "weight": 55.0,
+      "dateAdded": "2023-11-10",
+      "status": "active",
+      "createdAt": "2024-01-01T10:10:00Z"
+    },
+    {
+      "id": "animal_004",
+      "type": "goat",
+      "name": "Billy-001",
+      "age": 24,
+      "weight": 65.0,
+      "dateAdded": "2023-08-05",
+      "status": "active",
+      "createdAt": "2024-01-01T10:15:00Z"
+    },
+    {
+      "id": "animal_005",
+      "type": "goat",
+      "name": "Nanny-001",
+      "age": 30,
+      "weight": 62.0,
+      "dateAdded": "2023-07-12",
+      "status": "active",
+      "createdAt": "2024-01-01T10:20:00Z"
+    }
+  ],
+  "vaccinations": [
+    {
+      "id": "vac_001",
+      "animalId": "animal_001",
+      "vaccineType": "FMD",
+      "dateVaccinated": "2024-04-15",
+      "nextDueDate": "2024-07-15",
+      "veterinarian": "Dr. John Smith",
+      "notes": "Successfully vaccinated",
+      "createdAt": "2024-04-15T10:00:00Z"
+    },
+    {
+      "id": "vac_002",
+      "animalId": "animal_001",
+      "vaccineType": "ECF",
+      "dateVaccinated": "2024-03-20",
+      "nextDueDate": "2024-09-20",
+      "veterinarian": "Dr. Sarah Johnson",
+      "notes": "Good response",
+      "createdAt": "2024-03-20T10:00:00Z"
+    },
+    {
+      "id": "vac_003",
+      "animalId": "animal_002",
+      "vaccineType": "CBPP",
+      "dateVaccinated": "2024-02-10",
+      "nextDueDate": "2025-02-10",
+      "veterinarian": "Dr. John Smith",
+      "notes": "Animal in good health",
+      "createdAt": "2024-02-10T10:00:00Z"
+    },
+    {
+      "id": "vac_004",
+      "animalId": "animal_003",
+      "vaccineType": "Sheep Pox",
+      "dateVaccinated": "2024-01-15",
+      "nextDueDate": "2025-01-15",
+      "veterinarian": "Dr. Peter Brown",
+      "notes": "First vaccination",
+      "createdAt": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "production": [
+    {
+      "id": "prod_001",
+      "animalId": "animal_001",
+      "date": "2024-05-10",
+      "morning": 15.5,
+      "afternoon": 12.3,
+      "evening": 14.2,
+      "total": 42.0,
+      "notes": "Good production day",
+      "createdAt": "2024-05-10T10:00:00Z"
+    },
+    {
+      "id": "prod_002",
+      "animalId": "animal_001",
+      "date": "2024-05-11",
+      "morning": 15.0,
+      "afternoon": 12.0,
+      "evening": 13.8,
+      "total": 40.8,
+      "notes": "Slight decrease",
+      "createdAt": "2024-05-11T10:00:00Z"
+    },
+    {
+      "id": "prod_003",
+      "animalId": "animal_002",
+      "date": "2024-05-10",
+      "morning": 14.2,
+      "afternoon": 11.5,
+      "evening": 13.0,
+      "total": 38.7,
+      "notes": "Normal production",
+      "createdAt": "2024-05-10T10:00:00Z"
+    },
+    {
+      "id": "prod_004",
+      "animalId": "animal_002",
+      "date": "2024-05-11",
+      "morning": 14.5,
+      "afternoon": 11.8,
+      "evening": 13.2,
+      "total": 39.5,
+      "notes": "Good level",
+      "createdAt": "2024-05-11T10:00:00Z"
+    }
+  ],
+  "nutrition": [
+    {
+      "id": "nut_001",
+      "animalId": "animal_001",
+      "date": "2024-05-10",
+      "forage": {
+        "hayBales": 5,
+        "silageCorn": 2,
+        "babyCorn": 1,
+        "nappierGrass": 3
+      },
+      "concentrates": {
+        "dairyMeal": 2,
+        "maizeMeal": 1.5,
+        "maizeGerm": 1,
+        "wheatBran": 0.5,
+        "wheatPollard": 0.5,
+        "molasses": 0.2,
+        "machicha": 0.5
+      },
+      "salts": {
+        "salt": 0.1
+      },
+      "createdAt": "2024-05-10T10:00:00Z"
+    },
+    {
+      "id": "nut_002",
+      "animalId": "animal_002",
+      "date": "2024-05-10",
+      "forage": {
+        "hayBales": 4.5,
+        "silageCorn": 1.8,
+        "babyCorn": 0.8,
+        "nappierGrass": 2.8
+      },
+      "concentrates": {
+        "dairyMeal": 1.8,
+        "maizeMeal": 1.3,
+        "maizeGerm": 0.9,
+        "wheatBran": 0.4,
+        "wheatPollard": 0.4,
+        "molasses": 0.15,
+        "machicha": 0.4
+      },
+      "salts": {
+        "salt": 0.08
+      },
+      "createdAt": "2024-05-10T10:00:00Z"
+    }
+  ],
+  "deworming": [
+    {
+      "id": "dew_001",
+      "animalId": "animal_001",
+      "dateDewomed": "2024-02-15",
+      "brand": "Levamisole",
+      "amount": 2.5,
+      "nextDueDate": "2024-05-15",
+      "veterinarian": "Dr. John Smith",
+      "notes": "No adverse reactions",
+      "createdAt": "2024-02-15T10:00:00Z"
+    },
+    {
+      "id": "dew_002",
+      "animalId": "animal_002",
+      "dateDewomed": "2024-03-10",
+      "brand": "Fenbendazole",
+      "amount": 2.3,
+      "nextDueDate": "2024-06-10",
+      "veterinarian": "Dr. Sarah Johnson",
+      "notes": "Animal responded well",
+      "createdAt": "2024-03-10T10:00:00Z"
+    },
+    {
+      "id": "dew_003",
+      "animalId": "animal_003",
+      "dateDewomed": "2024-01-20",
+      "brand": "Ivermectin",
+      "amount": 0.5,
+      "nextDueDate": "2024-04-20",
+      "veterinarian": "Dr. Peter Brown",
+      "notes": "Regular schedule",
+      "createdAt": "2024-01-20T10:00:00Z"
+    }
+  ],
+  "settings": {
+    "farmName": "Green Valley Farm",
+    "farmLocation": "Nairobi, Kenya",
+    "farmContact": "+254712345678"
+  }
+}

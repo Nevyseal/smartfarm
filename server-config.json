@@ -1,0 +1,14 @@
+{
+  "server": {
+    "port": 8000,
+    "host": "0.0.0.0",
+    "visibility": "public",
+    "logging": true,
+    "logFile": "server.log",
+    "description": "Smart Farm Manager - Public Server Configuration"
+  },
+  "security": {
+    "corsEnabled": true,
+    "https": false
+  }
+}

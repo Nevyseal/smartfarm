@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 Smart Farm Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>🌾 FARM MANAGER</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" data-tab="dashboard" class="nav-link active">📊 Dashboard</a></li>
+                <li><a href="#" data-tab="animals" class="nav-link">🐄 Animals</a></li>
+                <li><a href="#" data-tab="vaccinations" class="nav-link">💉 Vaccinations</a></li>
+                <li><a href="#" data-tab="production" class="nav-link">🥛 Production</a></li>
+                <li><a href="#" data-tab="health" class="nav-link">🏥 Health</a></li>
+                <li><a href="#" data-tab="nutrition" class="nav-link">🌾 Nutrition</a></li>
+                <li><a href="#" data-tab="deworming" class="nav-link">💊 Deworming</a></li>
+                <li><a href="#" data-tab="breeding" class="nav-link">👶 Breeding</a></li>
+                <li><a href="#" data-tab="sales" class="nav-link">💰 Sales</a></li>
+                <li><a href="#" data-tab="expenses" class="nav-link">💸 Expenses</a></li>
+                <li><a href="#" data-tab="employees" class="nav-link">👥 Employees</a></li>
+                <li><a href="#" data-tab="reports" class="nav-link">📈 Reports</a></li>
+                <li><a href="#" data-tab="data-management" class="nav-link">💾 Data Management</a></li>
+                <li><a href="#" data-tab="settings" class="nav-link">⚙️ Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div id="db-status" class="db-status connection-checking">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Checking Database...</span>
+                    </div>
+                    <div class="user-info">
+                        <span id="user-name">Farm Manager</span>
+                        <button id="logout-btn" class="btn-logout">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Content -->
+            <section class="content">
+                <!-- DASHBOARD TAB -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <h3>Total Animals</h3>
+                            <p id="total-animals" class="stat-number">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Daily Milk Prod.</h3>
+                            <p id="daily-milk" class="stat-number">0L</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Vaccinations Due</h3>
+                            <p id="vaccines-due" class="stat-number">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Deworming Due</h3>
+                            <p id="deworming-due" class="stat-number">0</p>
+                        </div>
+                    </div>
+                    <div class="charts-container">
+                        <div class="chart-box full-width">
+                            <h3>Production Trend (Weekly)</h3>
+                            <canvas id="productionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ANIMALS TAB -->
+                <div id="animals" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Animals Management</h2>
+                        <button id="add-animal-btn" class="btn btn-primary">+ Add Animal</button>
+                    </div>
+
+                    <!-- Add/Edit Animal Form -->
+                    <div id="animal-form-container" class="form-container hidden">
+                        <form id="animal-form" class="form">
+                            <h3>Add New Animal</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal Type *</label>
+                                    <select id="animal-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="cow">🐄 <i>Bovine</i>(Cattle)-Cows & Bulls</option>
+                                        <option value="sheep">🐑 <i>Ovine</i> (Sheep) -Ram &ewes</option>
+                                        <option value="goat">🐐 <i>Caprine</i> (Goats) -Bucks &Does</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Name/ID *</label>
+                                    <input type="text" id="animal-name" placeholder="e.g., Bessie-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Age (Months)</label>
+                                    <input type="number" id="animal-age" min="0">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Weight (kg)</label>
+                                    <input type="number" id="animal-weight" min="0" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Added</label>
+                                    <input type="date" id="animal-date-added">
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select id="animal-status">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Animal</button>
+                                <button type="button" id="cancel-animal-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Animals List -->
+                    <div id="animals-list" class="animals-list">
+                        <p>No animals added yet. Click "Add Animal" to get started.</p>
+                    </div>
+                </div>
+
+                <!-- VACCINATIONS TAB -->
+                <div id="vaccinations" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Vaccination Records</h2>
+                        <button id="add-vaccine-btn" class="btn btn-primary">+ Add Vaccination</button>
+                    </div>
+
+                    <!-- Add Vaccination Form -->
+                    <div id="vaccine-form-container" class="form-container hidden">
+                        <form id="vaccine-form" class="form">
+                            <h3>Record Vaccination 💉</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal *</label>
+                                    <select id="vaccine-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Vaccine Type *</label>
+                                    <select id="vaccine-type" required>
+                                        <option value="">Select Vaccine</option>
+                                        <option value="ECF">ECF</option>
+                                        <option value="CBPP">CBPP</option>
+                                        <option value="LSD">LSD</option>
+                                        <option value="FMD">FMD</option>
+                                        <option value="Black Quarter & Anthrax">Black Quarter & Anthrax</option>
+                                        <option value="Recto Max">Recto Max</option>
+                                        <option value="Ultrachoice">Ultrachoice</option>
+                                        <option value="CCPP">CCPP</option>
+                                        <option value="Sheep & Goat Pox">Sheep & Goat Pox</option>
+                                        <option value="Contagious Ecthyma">Contagious Ecthyma</option>
+                                        <option value="Blue Tongue">Blue Tongue</option>
+                                        <option value="PPR">PPR</option>
+                                        <option value="Enterotoxaemia">Enterotoxaemia</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Date Vaccinated *</label>
+                                    <input type="date" id="vaccine-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Next Due Date</label>
+                                    <input type="date" id="vaccine-next-due">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Veterinarian</label>
+                                    <input type="text" id="vaccine-vet" placeholder="Name of veterinarian">
+                                </div>
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <input type="text" id="vaccine-notes" placeholder="Any additional notes">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Vaccination</button>
+                                <button type="button" id="cancel-vaccine-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Vaccines List -->
+                    <div id="vaccines-list" class="vaccines-list">
+                        <p>No vaccinations recorded yet.</p>
+                    </div>
+                </div>
+
+                <!-- PRODUCTION TAB -->
+                <div id="production" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Milk Production Records</h2>
+                        <button id="add-production-btn" class="btn btn-primary">+ Record Production</button>
+                    </div>
+
+                    <!-- Add Production Form -->
+                    <div id="production-form-container" class="form-container hidden">
+                        <form id="production-form" class="form">
+                            <h3>Record Daily Production 🥛</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal *</label>
+                                    <select id="production-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="production-date" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Morning Milk (Liters)</label>
+                                    <input type="number" id="production-morning" min="0" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Afternoon Milk (Liters)</label>
+                                    <input type="number" id="production-afternoon" min="0" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Evening Milk (Liters)</label>
+                                    <input type="number" id="production-evening" min="0" step="0.1">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <textarea id="production-notes" placeholder="Any observations or notes"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Production</button>
+                                <button type="button" id="cancel-production-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Production List & Chart -->
+                    <div class="production-stats">
+                        <div class="stat-box">
+                            <h4>Average Daily Production</h4>
+                            <p id="avg-daily-production" class="stat-value">0L</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Total This Month</h4>
+                            <p id="total-monthly-production" class="stat-value">0L</p>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Production Trend (Weekly)</h3>
+                        <canvas id="productionTrendChart"></canvas>
+                    </div>
+                    <div id="production-list" class="production-list">
+                        <p>No production records yet.</p>
+                    </div>
+                </div>
+
+                <!-- NUTRITION TAB -->
+                <div id="nutrition" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Nutrition Management</h2>
+                        <button id="add-nutrition-btn" class="btn btn-primary">+ Record Nutrition</button>
+                    </div>
+
+                    <!-- Add Nutrition Form -->
+                    <div id="nutrition-form-container" class="form-container hidden">
+                        <form id="nutrition-form" class="form">
+                            <h3>Nutrition Records 🌾</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal *</label>
+                                    <select id="nutrition-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="nutrition-date" required>
+                                </div>
+                            </div>
+                            <fieldset>
+                                <legend>Forage (in Kg)</legend>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Hay Bails (kg)</label>
+                                        <input type="number" id="nutrition-hay" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Silage Full Corn (Tonnage)</label>
+                                        <input type="number" id="nutrition-silage" min="0" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Baby Corn (Tonnage)</label>
+                                        <input type="number" id="nutrition-baby-corn" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nappier Grass (Tonnage)</label>
+                                        <input type="number" id="nutrition-nappier" min="0" step="0.1">
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Concentrates (in Kg)</legend>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Dairy Meal (kg)</label>
+                                        <input type="number" id="nutrition-dairy-meal" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Maize Meal (kg)</label>
+                                        <input type="number" id="nutrition-maize-meal" min="0" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Maize Germ (kg)</label>
+                                        <input type="number" id="nutrition-maize-germ" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Wheat Bran (kg)</label>
+                                        <input type="number" id="nutrition-wheat-bran" min="0" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Wheat Pollard (kg)</label>
+                                        <input type="number" id="nutrition-wheat-pollard" min="0" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Molasses (kg)</label>
+                                        <input type="number" id="nutrition-molasses" min="0" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Machicha/Pulp (kg)</label>
+                                    <input type="number" id="nutrition-machicha" min="0" step="0.1">
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Salts</legend>
+                                <div class="form-group">
+                                    <label>Salt (kg)</label>
+                                    <input type="number" id="nutrition-salt" min="0" step="0.1">
+                                </div>
+                            </fieldset>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Nutrition</button>
+                                <button type="button" id="cancel-nutrition-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="nutrition-list" class="nutrition-list">
+                        <p>No nutrition records yet.</p>
+                    </div>
+                </div>
+
+                <!-- DEWORMING TAB -->
+                <div id="deworming" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Deworming Schedule</h2>
+                        <button id="add-deworming-btn" class="btn btn-primary">+ Record Deworming</button>
+                    </div>
+
+                    <!-- Add Deworming Form -->
+                    <div id="deworming-form-container" class="form-container hidden">
+                        <form id="deworming-form" class="form">
+                            <h3>Deworming Records 💊</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal *</label>
+                                    <select id="deworming-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Dewormed *</label>
+                                    <input type="date" id="deworming-date" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Dewormer Brand *</label>
+                                    <input type="text" id="deworming-brand" placeholder="e.g., Levamisole, Fenbendazole" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount (kg) *</label>
+                                    <input type="number" id="deworming-amount" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Next Due Date</label>
+                                    <input type="date" id="deworming-next-due">
+                                </div>
+                                <div class="form-group">
+                                    <label>Veterinarian</label>
+                                    <input type="text" id="deworming-vet">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="deworming-notes" placeholder="Any additional notes"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Deworming</button>
+                                <button type="button" id="cancel-deworming-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="deworming-list" class="deworming-list">
+                        <p>No deworming records yet.</p>
+                    </div>
+                </div>
+
+                <!-- HEALTH TAB -->
+                <div id="health" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Health & Veterinary Records</h2>
+                        <button id="add-health-btn" class="btn btn-primary">+ Add Health Record</button>
+                    </div>
+
+                    <div id="health-form-container" class="form-container hidden">
+                        <form id="health-form" class="form">
+                            <h3>Health Record 🏥</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal *</label>
+                                    <select id="health-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="health-date" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Health Status *</label>
+                                    <select id="health-status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="healthy">Healthy</option>
+                                        <option value="sick">Sick</option>
+                                        <option value="injured">Injured</option>
+                                        <option value="recovering">Recovering</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Temperature (°C)</label>
+                                    <input type="number" id="health-temperature" min="35" max="42" step="0.1">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Sickness/Symptoms *</label>
+                                    <input type="text" id="health-condition" placeholder="e.g., Mastitis, Coughing, Diarrhea" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Veterinarian</label>
+                                    <input type="text" id="health-vet" placeholder="Name of veterinarian">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Treatment Given *</label>
+                                <textarea id="health-treatment" placeholder="Specify medications, dosage, and procedures" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>General Notes</label>
+                                <textarea id="health-notes" placeholder="Any additional observations or follow-up instructions"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Record</button>
+                                <button type="button" id="cancel-health-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="health-list" class="health-list">
+                        <p>No health records yet.</p>
+                    </div>
+                </div>
+
+                <!-- BREEDING TAB -->
+                <div id="breeding" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Breeding & Pregnancy Tracking</h2>
+                        <button id="add-breeding-btn" class="btn btn-primary">+ Add Breeding Record</button>
+                    </div>
+
+                    <div class="breeding-target-info">
+                        <h4>🎯 Breeding Goal: 1 Calf Per Year</h4>
+                        <p>To maximize farm productivity, each cow should ideally produce one calf every 12 months. 
+                           Monitor the <strong>Conception Rate</strong> and <strong>Breeding Scale</strong> below to track efficiency.</p>
+                    </div>
+
+                    <div id="breeding-form-container" class="form-container hidden">
+                        <form id="breeding-form" class="form">
+                            <h3>Breeding Record 👶</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Animal (Female) *</label>
+                                    <select id="breeding-animal" required>
+                                        <option value="">Select Animal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sire/Male ID</label>
+                                    <input type="text" id="breeding-sire" placeholder="ID of male parent">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Breeding Date *</label>
+                                    <input type="date" id="breeding-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Expected Due Date</label>
+                                    <input type="date" id="breeding-due-date">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Status *</label>
+                                    <select id="breeding-status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="pregnant">Pregnant</option>
+                                        <option value="delivered">Delivered</option>
+                                        <option value="failed">Failed/Repeat Service</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Number of Offspring</label>
+                                    <input type="number" id="breeding-offspring" min="0">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Conception Rate (%)</label>
+                                    <input type="number" id="breeding-conception-rate" min="0" max="100" placeholder="e.g., 85">
+                                </div>
+                                <div class="form-group">
+                                    <label>Breeding Scale/Performance</label>
+                                    <select id="breeding-performance">
+                                        <option value="">Select Scale</option>
+                                        <option value="good">🌟 Good</option>
+                                        <option value="fair">⚖️ Fair</option>
+                                        <option value="poor">⚠️ Poor</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="breeding-notes" placeholder="Any observations about breeding/pregnancy. Target: 1 calf per year per cow."></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Record</button>
+                                <button type="button" id="cancel-breeding-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="breeding-list" class="breeding-list">
+                        <p>No breeding records yet.</p>
+                    </div>
+                </div>
+
+                <!-- SALES TAB -->
+                <div id="sales" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Sales & Income Management</h2>
+                        <button id="add-sale-btn" class="btn btn-primary">+ Record Sale</button>
+                    </div>
+
+                    <div id="sale-form-container" class="form-container hidden">
+                        <form id="sale-form" class="form">
+                            <h3>Sales Record 💰</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Product Type *</label>
+                                    <select id="sale-product" required>
+                                        <option value="">Select Product</option>
+                                        <option value="milk">Milk (Liters)</option>
+                                        <option value="animal">Animal Sale</option>
+                                        <option value="manure">Manure (kg)</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="sale-date" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Quantity *</label>
+                                    <input type="number" id="sale-quantity" min="0" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Unit Price *</label>
+                                    <input type="number" id="sale-unit-price" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Buyer/Notes</label>
+                                <input type="text" id="sale-buyer" placeholder="Buyer name or payment details">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Sale</button>
+                                <button type="button" id="cancel-sale-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="production-stats">
+                        <div class="stat-box">
+                            <h4>Total Income</h4>
+                            <p id="total-income" class="stat-value">KES 0</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>This Month</h4>
+                            <p id="monthly-income" class="stat-value">KES 0</p>
+                        </div>
+                    </div>
+
+                    <div id="sales-list" class="sales-list">
+                        <p>No sales recorded yet.</p>
+                    </div>
+                </div>
+
+                <!-- EXPENSES TAB -->
+                <div id="expenses" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Expense Management</h2>
+                        <button id="add-expense-btn" class="btn btn-primary">+ Add Expense</button>
+                    </div>
+
+                    <div id="expense-form-container" class="form-container hidden">
+                        <form id="expense-form" class="form">
+                            <h3>Expense Record 💸</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Expense Type *</label>
+                                    <select id="expense-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="feed">Feed & Nutrition</option>
+                                        <option value="medication">Medication & Vaccines</option>
+                                        <option value="maintenance">Maintenance & Repairs</option>
+                                        <option value="labor">Labor & Salaries</option>
+                                        <option value="transport">Transport</option>
+                                        <option value="utilities">Utilities</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="expense-date" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Amount (KES) *</label>
+                                    <input type="number" id="expense-amount" min="0" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category/Item</label>
+                                    <input type="text" id="expense-category" placeholder="e.g., Dairy meal 50kg bag">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="expense-notes" placeholder="Additional details"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Expense</button>
+                                <button type="button" id="cancel-expense-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="production-stats">
+                        <div class="stat-box">
+                            <h4>Total Expenses</h4>
+                            <p id="total-expenses" class="stat-value">KES 0</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>This Month</h4>
+                            <p id="monthly-expenses" class="stat-value">KES 0</p>
+                        </div>
+                    </div>
+
+                    <div id="expenses-list" class="expenses-list">
+                        <p>No expenses recorded yet.</p>
+                    </div>
+                </div>
+
+                <!-- EMPLOYEES TAB -->
+                <div id="employees" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Employee Management</h2>
+                        <button id="add-employee-btn" class="btn btn-primary">+ Add Employee</button>
+                    </div>
+
+                    <div id="employee-form-container" class="form-container hidden">
+                        <form id="employee-form" class="form">
+                            <h3>Employee Record 👥</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Name *</label>
+                                    <input type="text" id="employee-name" placeholder="Full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Role *</label>
+                                    <select id="employee-role" required>
+                                        <option value="">Select Role</option>
+                                        <option value="manager">Farm Manager</option>
+                                        <option value="milker">Milker</option>
+                                        <option value="cleaner">Cleaner</option>
+                                        <option value="veterinary">Veterinary Assistant</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Date Hired *</label>
+                                    <input type="date" id="employee-hire-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary (Monthly)</label>
+                                    <input type="number" id="employee-salary" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" id="employee-phone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select id="employee-status">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="employee-notes" placeholder="Skills, responsibilities, or notes"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Employee</button>
+                                <button type="button" id="cancel-employee-btn" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="employees-list" class="employees-list">
+                        <p>No employees added yet.</p>
+                    </div>
+                </div>
+
+                <!-- REPORTS TAB -->
+                <div id="reports" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Reports & Analytics 📈</h2>
+                    </div>
+                    <div class="reports-grid">
+                        <div class="chart-box">
+                            <h3>Monthly Production</h3>
+                            <canvas id="monthlyProductionChart"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Animal Health Status</h3>
+                            <canvas id="healthStatusChart"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Vaccination Coverage</h3>
+                            <canvas id="vaccinationCoverageChart"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Deworming Schedule</h3>
+                            <canvas id="dewormingScheduleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DATA MANAGEMENT TAB -->
+                <div id="data-management" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Data Management 💾</h2>
+                    </div>
+                    
+                    <div class="data-management-grid">
+                        <!-- Excel Import Card -->
+                        <div class="card import-card">
+                            <h3>📥 Import from Excel</h3>
+                            <p>Upload your <code>.xlsx</code> or <code>.csv</code> file to bulk-add animals, production, and history.</p>
+                            <div class="import-controls">
+                                <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display: none;">
+                                <button id="choose-file-btn" class="btn btn-primary">📁 Choose File</button>
+                                <span id="selected-file-name" class="file-name">No file chosen</span>
+                                <button id="process-import-btn" class="btn btn-success" disabled>⚡ Process & Import</button>
+                            </div>
+                            <div class="import-instructions">
+                                <h4>💡 Instructions:</h4>
+                                <ul>
+                                    <li>Ensure your Excel file follows the farm template.</li>
+                                    <li>Animal names should be in the header row.</li>
+                                    <li>Morning and Evening milk columns should be grouped by animal.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Data Export Card -->
+                        <div class="card export-card">
+                            <h3>📤 Export Data</h3>
+                            <p>Download your entire farm database as a JSON backup file.</p>
+                            <button id="full-export-btn" class="btn btn-secondary">💾 Download Backup</button>
+                        </div>
+                    </div>
+
+                    <!-- Import Progress/Logs -->
+                    <div id="import-log-container" class="import-log hidden">
+                        <h3>📋 Import Logs</h3>
+                        <div id="import-logs" class="log-content"></div>
+                    </div>
+                </div>
+
+                <div id="settings" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Settings ⚙️</h2>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Farm Information</h3>
+                        <form id="farm-settings-form" class="form">
+                            <div class="form-group">
+                                <label>Farm Name</label>
+                                <input type="text" id="farm-name" placeholder="Your Farm Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Farm Location</label>
+                                <input type="text" id="farm-location" placeholder="City/Region">
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Number</label>
+                                <input type="tel" id="farm-contact" placeholder="Phone number">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/animals.js"></script>
+    <script src="js/vaccinations.js"></script>
+    <script src="js/production.js"></script>
+    <script src="js/nutrition.js"></script>
+    <script src="js/deworming.js"></script>
+    <script src="js/health.js"></script>
+    <script src="js/breeding.js"></script>
+    <script src="js/sales.js"></script>
+    <script src="js/expenses.js"></script>
+    <script src="js/employees.js"></script>
+    <script src="js/data-management.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/autosave.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('Service Worker registration failed:', err);
+            });
+        }
+    </script>
+</body>
+</html>
