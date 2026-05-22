@@ -7,11 +7,40 @@ const App = (() => {
     // Initialize app
     function init() {
         console.log('Initializing Farm Manager App...');
+        setupTheme();
         setupNavigation();
         setupSettings();
         updateDashboard();
         // Auto-update dashboard every 5 seconds
         setInterval(updateDashboard, 5000);
+    }
+
+    // Theme Management
+    function setupTheme() {
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply initial theme
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const theme = document.documentElement.getAttribute('data-theme');
+                const newTheme = theme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+        }
+    }
+
+    function updateThemeIcon(theme) {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
     }
 
     // Setup navigation
