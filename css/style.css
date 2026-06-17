@@ -469,24 +469,6 @@ input:focus, select:focus, textarea:focus {
     color: #e74c3c;
 }
 
-/* Breeding Target Box */
-.breeding-target-info {
-    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-    border-left: 5px solid var(--primary-color);
-    padding: 15px 20px;
-    margin-bottom: 25px;
-    border-radius: 0 8px 8px 0;
-    box-shadow: var(--shadow);
-}
-
-.breeding-target-info h4 {
-    color: var(--primary-color);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 /* Database Connection Status */
 .db-status {
     display: flex;
@@ -795,40 +777,61 @@ input:focus, select:focus, textarea:focus {
 }
 
 .breeding-target-info {
-    background-color: var(--surface-2);
+    background-color: var(--card-bg);
     padding: 24px;
     border-radius: 16px;
     margin-bottom: 30px;
+    border: 1px solid var(--border-color);
     border-left: 6px solid var(--primary-color);
     color: var(--text-dark);
     box-shadow: var(--shadow);
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.breeding-target-info::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(46, 204, 113, 0.05));
+    pointer-events: none;
 }
 
 .breeding-target-info h4 {
     color: var(--primary-color);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-weight: 800;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    font-size: 1.2rem;
 }
 
 .breeding-target-info p {
     color: var(--text-dark);
-    opacity: 0.9;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    opacity: 0.95;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0;
 }
 
 [data-theme="dark"] .breeding-target-info {
-    background-color: #1e212b;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    background-color: #000000;
+    border-color: #333333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="dark"] .breeding-target-info p {
-    color: #cbd5e1;
+[data-theme="dark"] .breeding-target-info p,
+[data-theme="dark"] .breeding-target-info h4 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .breeding-target-info::after {
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.02));
 }
 
 @keyframes pulse {
